@@ -1,0 +1,25 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.model_selection import cross_val_score
+from sklearn.linear_model import LogisticRegression
+
+%matplotlib inline
+
+url = 'https://raw.githubusercontent.com/leobugoni/pessoa-fisica/master/dataset_treino.csv'
+pessoas = pd.read_csv(url)
+
+pessoas.head()
+
+pessoas.info()
+
+x = pessoas[['idade', 'score', 'renda']]
+y = pessoas['inadimplente']
+
+lr = LogisticRegression(solver='liblinear')
+scores = cross_val_score(lr, x, y, cv=5, scoring='accuracy')
+print('Acurácia média:', scores.mean())
+
+pessoa_teste = [[25, 660, 10000]]
+lr.fit(x, y)
+print('Classificações:', lr.predict(pessoa_teste))
+print('Probabilidades:\n', lr.predict_proba(pessoa_teste))
